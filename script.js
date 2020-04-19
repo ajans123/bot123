@@ -1,6 +1,8 @@
 var app = new Vue({el: '#app', data: {fiiller: fiiller, request: "", response: ""}, mounted() {document.getElementsByClassName('request')[0].focus()},
     methods: {
         getResponse: function () {
+            this.response = "";
+
             let req = this.request, type, zamir, zamir_cevap;
 
             if (req.includes(" mi") || req.includes(" mı") || req.includes(" mu") || req.includes(" mü")) type = "soru";
@@ -39,15 +41,13 @@ var app = new Vue({el: '#app', data: {fiiller: fiiller, request: "", response: "
             else if (zamir === "sizi") return "siz kim lan";
             else zamir_cevap = zamir;
 
-
-
             let samimiyet_no = Math.floor((Math.random() * 17) + 1);
             let samimiyet = samimiyet_no === 1 ? "bence " : samimiyet_no === 2 ? "sanırım " : samimiyet_no === 3 ? "yani " : samimiyet_no === 4 ? "yahu " : samimiyet_no === 5 ? "hmm " : samimiyet_no === 6 ? "bilmem belki " : samimiyet_no === 7 ? "belki " : samimiyet_no === 8 ? "benim fikrim " : samimiyet_no === 9 ? "anladım  " : "";
 
             let rsamimiyet_no = Math.floor((Math.random() * 17) + 1);
             let rsamimiyet = rsamimiyet_no === 1 ? " lan" : rsamimiyet_no === 2 ? " yani" : rsamimiyet_no === 3 ? " amk" : rsamimiyet_no === 4 ? " yahu" : rsamimiyet_no === 5 ? " yav" : rsamimiyet_no === 6 ? " aq" : rsamimiyet_no === 7 ? " abi" : rsamimiyet_no === 8 ? " aga" : rsamimiyet_no === 9 ? " sanki" : "";
 
-            if (req.includes(" sik")) return "küfür etme sikerim seni" + rsamimiyet;
+            if (req.includes(" sik")) return "küfür etme " + rsamimiyet;
 
             if (req.includes("selam")) return "selam";
             if (req.includes("naber")) return "iyidir";
@@ -77,16 +77,33 @@ var app = new Vue({el: '#app', data: {fiiller: fiiller, request: "", response: "
             }
 
             let lm = "";
-            if (zamir === "sen" || zamir === "seni") lm = "m";
 
-            let olumsuz = "";
+            let kain = false, olumsuz = "";
             let olumsuz_no = Math.floor((Math.random() * 2));
-            if (fiil_i.includes('a') || fiil_i.includes('ı') || fiil_i.includes('o') || fiil_i.includes('u')) olumsuz = "ma" + lm;
-            if (fiil_i.includes('e') || fiil_i.includes('i') || fiil_i.includes('ö') || fiil_i.includes('ü')) olumsuz = "me" + lm;
+            if (fiil_i.includes('a') || fiil_i.includes('ı') || fiil_i.includes('o') || fiil_i.includes('u')) kain = true;
+            if (fiil_i.includes('e') || fiil_i.includes('i') || fiil_i.includes('ö') || fiil_i.includes('ü')) kain = false;
+
+            if (kain) {
+                if (zamir === "biz") lm = "yın";
+                if (zamir === "sen" || zamir === "seni") lm = "m";
+                if (zamir === "o" || zamir === "onlar") lm = "sın";
+                olumsuz = "ma" + lm;
+            } else {
+                if (zamir === "biz") lm = "yin";
+                if (zamir === "sen" || zamir === "seni") lm = "m";
+                if (zamir === "o" || zamir === "onlar") lm = "sin";
+                olumsuz = "me" + lm;
+            }
 
             let response = soru + samimiyet + zamir_cevap + " " + fiil_i + (olumsuz_no ? olumsuz : "") + rsamimiyet; // + " " + type;
 
-            if (response.includes("undefined")) response = "ne diyon" + rsamimiyet;
+            if (response === "undefined") response = "ne diyon" + rsamimiyet;
+
+            response = response.replace("undefined","").replace("undefined","").replace("undefined","").replace("undefined","").replace("undefined","").replace("undefined","");
+
+            this.request = "";
+            console.log(response);
+            if (response === "") return "?";
 
             return response;
         }
